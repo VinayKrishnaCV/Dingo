@@ -5,7 +5,13 @@ var dog, happyDog, Dingo;
 var database;
 
 //food variables
-var foodS, foodStock;
+var foodS, foodStock, foodObj;
+
+//buttons
+var feedDingo, addFood
+
+//others
+var fedTime, lastFed
 
 function preload()
 {
@@ -19,6 +25,7 @@ function setup()
   //creating canvas
   createCanvas( 500, 500);
   
+  //database related stuff
   database = firebase.database();
   foodStock = database.ref('food')
   foodStock.on("value",readStokingMec)
@@ -27,6 +34,18 @@ function setup()
   Dingo = createSprite(260,300,20,50);
   Dingo.addImage(dog);
   Dingo.scale = 0.2;
+
+  //creating food obj
+  foodObj = new Food();
+
+  //button creations
+  feedDingo = createButton("Feed Dingo")
+  feedDingo.position(355,200)
+  feedDingo.mousePressed(feedDog)
+
+  addFood = createButton("Add Food")
+  addFood.position(355,250)
+  addFood.mousePressed(addFoods)
 }
 
 
@@ -37,16 +56,6 @@ function draw()
 
   //drawing Sprites
   drawSprites();
-
-  //feed it
-  Dingo.addImage(dog)
-  if(keyDown(UP_ARROW)){
-    Dingo.addImage(happyDog)
-  }
-  if(keyWentUp(UP_ARROW)){
-    writeStokingMec(foodS);
-    Dingo.addImage(happyDog)
-  }
 
   //reset
   if(keyWentUp("r")){
@@ -65,6 +74,30 @@ function draw()
   fill("blue")
   text("ꘘ💿ᴑ𝓭 டə𝒇Ե:"+foodS,330,200)
   pop()
+
+  //Displating X and Y in screen
+  text(mouseX+","+mouseY,mouseX,mouseY)
+
+  //displaying
+  foodObj.display();
+
+  //last fed time checker
+  feedTime = database.ref('feedTime')
+  feedTime.on("value",function(data){ 
+    lastFed=data.val(); 
+  });
+
+  fill(255,255,254);
+  textSize(15);
+
+  if(lastFed>=12){
+   text("Last Fed :" + lastFed%12 + "PM", 150, 100);
+  }else if(lastFed ===0 ){
+   text("Last Fed : 12 AM" , 150,100)
+  }else{
+    
+   text("Last Fed :" + lastFed + "AM", 150,100);
+  }
 }
 
 //function to read values from DB
@@ -84,3 +117,22 @@ function writeStokingMec(x){
     food:x
   })
 }
+
+//fuction to update food stock and last fed time
+function feedDog(){
+  Dingo.addImage(happyDog);
+  foodObj.updateFoodStock(foodObj.getFoodStock()-1);
+  database.ref('/').update({
+   food:foodObj.getFoodStock(),
+   feedTime:hour ()
+  })
+}
+
+//function to add food in stock
+function addFoods(){
+  foodS++;
+  database.ref('/').update({
+    food:foodS
+  })
+}
+  
