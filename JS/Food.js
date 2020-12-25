@@ -39,7 +39,7 @@ class Food {
     
     getFoodStock(){
         var foodStockRef=database.ref("food")
-        foodStockRef.on("value",function(data){
+        foodStockRef.on("value",(data)=>{
             this.foodStock=data.val()
         })
     }

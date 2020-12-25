@@ -28,7 +28,7 @@ function setup()
   //database related stuff
   database = firebase.database();
   foodStock = database.ref('food')
-  foodStock.on("value",readStokingMec)
+  foodStock.on("value",foodObj.updateFoodStock(data))
 
   //creating Dingo
   Dingo = createSprite(260,300,20,50);
@@ -98,24 +98,6 @@ function draw()
     
    text("Last Fed :" + lastFed + "AM", 150,100);
   }
-}
-
-//function to read values from DB
-function readStokingMec(data){
-  foodS=data.val();
-}
-
-//function to write values in DB
-function writeStokingMec(x){
-
-  if(x<=0){
-    x=0
-  }else{
-    x=x-1
-  }
-  database.ref('/').set({
-    food:x
-  })
 }
 
 //fuction to update food stock and last fed time
