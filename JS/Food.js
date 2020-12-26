@@ -24,15 +24,15 @@ class Food {
     
     updateFoodStock(foodStock){
         database.ref("/").update({
-            food:foodStock,
-            feedTime:hour ()
+            food:foodStock
         })
     }
     
     deductFood(foodStock){
         if(foodStock>0){
             database.ref("/").update({
-                food:foodStock-1
+                food:foodStock-1,
+                feedTime:hour ()
             })
         }
     }

@@ -103,19 +103,14 @@ function draw()
 //fuction to update food stock and last fed time
 function feedDog(){
   Dingo.addImage(happyDog);
-  foodObj.updateFoodStock(foodObj.deductFood(foodS));
-  database.ref('/').update({
-   food:foodObj.getFoodStock(),
-  })
+  foodObj.deductFood(foodS)
 }
 
 //function to add food in stock
 function addFoods(){
   if(foodS<20){
     foodS++;
-    database.ref('/').update({
-      food:foodS
-    })
+    foodObj.updateFoodStock(foodS)
   }
 }
   
