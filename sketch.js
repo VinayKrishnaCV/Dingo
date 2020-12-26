@@ -36,8 +36,8 @@ function setup()
   Dingo.scale = 0.2;
 
   //button creations
-  feedDingo = createButton("Feed "+ Name)
-  feedDingo.position(355,200)
+  feedDingo = createButton()
+  feedDingo.position(355,225)
   feedDingo.mousePressed(feedDog)
 
   addFood = createButton("Add Food")
@@ -47,14 +47,17 @@ function setup()
   //name input
   nameChanger=createInput("")
   nameChanger.position(20,20)
-  if(nameChanger.value()){
-    Name = nameChanger.value()
-  }
 }
 
 
 function draw() 
 {  
+  //giving name
+  if(nameChanger.value()){
+    Name = nameChanger.value()
+    feedDingo.html("Feed "+Name)
+  }
+
   //colouring/refreshing the background
   background(46, 139, 87)
 
@@ -70,6 +73,7 @@ function draw()
   fill("black")
   noStroke()
   text("I Am "+ Name,200,20)
+  text("Give Me A Name",180,400)
   textSize(20)
   fill("blue")
   text("ꘘ💿ᴑ𝓭 டə𝒇Ե:"+foodS,330,200)
