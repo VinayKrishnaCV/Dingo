@@ -27,16 +27,13 @@ function setup()
   
   //database related stuff
   database = firebase.database();
-  foodStock = database.ref('food')
-  foodStock.on("value",foodObj.updateFoodStock(data))
+  foodObj = new Food();
+  foodObj.getFoodStock()
 
   //creating Dingo
   Dingo = createSprite(260,300,20,50);
   Dingo.addImage(dog);
   Dingo.scale = 0.2;
-
-  //creating food obj
-  foodObj = new Food();
 
   //button creations
   feedDingo = createButton("Feed Dingo")
