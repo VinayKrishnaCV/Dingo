@@ -6,25 +6,26 @@ class Food {
     }
 
     display(){
-        var x=80,y=170;
+        var x=10,y=10;
         
         imageMode(CENTER);
         
         if(this.foodStock!=0){
             for(var i=0;i<this.foodStock;i++){
                 if(i%10===0){
-                    x=80;
+                    x=10;
                     y=y+50;
                 }
                 image(this.foodImage,x,y,50,50);
-                x=x+30;
+                x+=20;
             }
         }
     }
     
     updateFoodStock(foodStock){
         database.ref("/").update({
-            food:foodStock
+            food:foodStock,
+            feedTime:hour ()
         })
     }
     

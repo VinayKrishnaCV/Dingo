@@ -1,5 +1,5 @@
 //dog variables
-var dog, happyDog, Dingo;
+var dog, happyDog, Dingo, Name;
 
 //database variable
 var database;
@@ -11,7 +11,7 @@ var foodS, foodObj;
 var feedDingo, addFood
 
 //others
-var fedTime, lastFed
+var fedTime, lastFed, nameChanger
 
 function preload()
 {
@@ -36,13 +36,20 @@ function setup()
   Dingo.scale = 0.2;
 
   //button creations
-  feedDingo = createButton("Feed Dingo")
+  feedDingo = createButton("Feed "+ Name)
   feedDingo.position(355,200)
   feedDingo.mousePressed(feedDog)
 
   addFood = createButton("Add Food")
   addFood.position(355,250)
   addFood.mousePressed(addFoods)
+
+  //name input
+  nameChanger=createInput("")
+  nameChanger.position(20,20)
+  if(nameChanger.value()){
+    Name = nameChanger.value()
+  }
 }
 
 
@@ -62,7 +69,7 @@ function draw()
   textSize(20)
   fill("black")
   noStroke()
-  text("Note: Feed Dingo By Pressing Up Arrow ⬆",60,20)
+  text("I Am "+ Name,200,20)
   textSize(20)
   fill("blue")
   text("ꘘ💿ᴑ𝓭 டə𝒇Ե:"+foodS,330,200)
@@ -84,12 +91,12 @@ function draw()
   textSize(15);
 
   if(lastFed>=12){
-   text("Last Fed :" + lastFed%12 + "PM", 150, 100);
+   text("Last Fed :" + lastFed%12 + "PM", 336, 160);
   }else if(lastFed ===0 ){
-   text("Last Fed : 12 AM" , 150,100)
+   text("Last Fed : 12 AM" , 336, 160)
   }else{
     
-   text("Last Fed :" + lastFed + "AM", 150,100);
+   text("Last Fed :" + lastFed + "AM", 336, 160);
   }
 }
 
@@ -99,15 +106,16 @@ function feedDog(){
   foodObj.updateFoodStock(foodObj.deductFood(foodS));
   database.ref('/').update({
    food:foodObj.getFoodStock(),
-   feedTime:hour ()
   })
 }
 
 //function to add food in stock
 function addFoods(){
-  foodS++;
-  database.ref('/').update({
-    food:foodS
-  })
+  if(foodS<20){
+    foodS++;
+    database.ref('/').update({
+      food:foodS
+    })
+  }
 }
   
