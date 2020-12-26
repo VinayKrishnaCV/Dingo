@@ -5,7 +5,7 @@ var dog, happyDog, Dingo;
 var database;
 
 //food variables
-var foodS, foodStock, foodObj;
+var foodS, foodObj;
 
 //buttons
 var feedDingo, addFood
@@ -54,12 +54,8 @@ function draw()
   //drawing Sprites
   drawSprites();
 
-  //reset
-  if(keyWentUp("r")){
-    database.ref('/').set({
-      food:20
-    })
-  }
+  //defining
+  foodS = foodObj.foodStock
 
   //add styles here
   push()
@@ -100,7 +96,7 @@ function draw()
 //fuction to update food stock and last fed time
 function feedDog(){
   Dingo.addImage(happyDog);
-  foodObj.updateFoodStock(foodObj.getFoodStock()-1);
+  foodObj.updateFoodStock(foodObj.deductFood(foodS));
   database.ref('/').update({
    food:foodObj.getFoodStock(),
    feedTime:hour ()
