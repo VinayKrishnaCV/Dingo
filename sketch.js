@@ -1,5 +1,5 @@
 //dog variables
-var dog, happyDog, Dingo, Name;
+var dog, happyDog, Dingo, sadDog;
 
 //database variable
 var database;
@@ -10,14 +10,25 @@ var foodS, foodObj;
 //buttons
 var feedDingo, addFood
 
-//others
-var fedTime, lastFed, nameChanger
+//background var
+var bedroomImg,gardenImg,washroomImg;
+
+//time var
+var fedTime, lastFed, currentTime, n 
+
+//name var
+var Name ,nameChanger
+
 
 function preload()
 {
   //loding dog images
   dog = loadImage("images/Dog.png");
-	happyDog = loadImage("images/happydog.png");
+  happyDog = loadImage("images/happydog.png");
+  bedroomImg = loadImage("images/Bed Room.png");
+  gardenImg = loadImage("images/Garden.png");
+  washroomImg = loadImage("images/Wash Room.png");
+  sadDog=loadImage("images/Dog.png");
 }
 
 function setup() 
@@ -47,6 +58,12 @@ function setup()
   //name input
   nameChanger=createInput("")
   nameChanger.position(20,20)
+
+  //read game state from database
+  readState=database.ref('gameState');
+  readState.on("value",function(data){
+    gameState=data.val();
+  });
 }
 
 
@@ -58,11 +75,31 @@ function draw()
     feedDingo.html("Feed "+Name)
   }
 
+  currentTime=hour();
+  if(currentTime==(lastFed+0.1)){
+    update("Playing");
+    foodObj.garden();
+  }else if(currentTime==(lastFed+2)){
+    update("Sleeping");
+    foodObj.bedroom();
+  }else if(currentTime>(lastFed+2) && currentTime<=(lastFed+4)){
+    update("Bathing");
+    foodObj.washroom();
+  }else{
+    update("Hungry")
+    foodObj.display();
+  }
+
   //colouring/refreshing the background
+  if(gameState==="Hungry"){
   background(46, 139, 87)
+  }
 
   //drawing Sprites
   drawSprites();
+  if(frameCount===n+100){
+    Dingo.addImage(sadDog)
+  }
 
   //defining
   foodS = foodObj.foodStock
@@ -102,12 +139,25 @@ function draw()
     
    text("Last Fed :" + lastFed + "AM", 336, 160);
   }
+
+  //hungermeter
+  if(gameState!="Hungry"){
+    feedDingo.hide();
+    addFood.hide();
+    Dingo.remove();
+  }else{
+   feedDingo.show();
+   addFood.show();
+   //Dingo.addImage(sadDog);
+  }
 }
 
 //fuction to update food stock and last fed time
 function feedDog(){
   Dingo.addImage(happyDog);
   foodObj.deductFood(foodS)
+  n = frameCount;
+  console.log(n)
 }
 
 //function to add food in stock
@@ -116,5 +166,12 @@ function addFoods(){
     foodS++;
     foodObj.updateFoodStock(foodS)
   }
+}
+
+//update gameState
+function update(state){
+  database.ref('/').update({
+    gameState:state
+  })
 }
   
